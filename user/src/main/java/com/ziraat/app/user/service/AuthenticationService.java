@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ziraat.app.user.dto.AuthenticationResponse;
 import com.ziraat.app.user.dto.LoginRequest;
 import com.ziraat.app.user.dto.RegisterRequest;
+import com.ziraat.app.user.exception.TCKNAlreadyExistsException;
 import com.ziraat.app.user.model.Token;
 import com.ziraat.app.user.model.User;
+import com.ziraat.app.user.model.enums.Role;
 import com.ziraat.app.user.repository.TokenRepository;
 import com.ziraat.app.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 
 
@@ -28,31 +31,27 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {  // TODO
+    public AuthenticationResponse register(RegisterRequest request) {
 
-//        if (repository.existsByUsername(request.username())) {
-//            throw new TCKNAlreadyExistsException("TCKN already exists for : " + request.name());
-//        }
-//        var user = User.builder()
-//                .name(request.name())
-//                .tckn(request.tckn())
-//                .surname(request.surname())
-//                .password(passwordEncoder.encode(request.password()))
-//                .age(request.age())
-//                .gender(request.gender())
-//                .role(Role.ROLE_USER)
-//                .elo(USER_POINT)
-//                .build();
-//        var savedUser = repository.save(user);
-//        var jwtToken = jwtService.generateToken(user);
-//        var refreshToken = jwtService.generateRefreshToken(user);
-//        saveUserToken(savedUser, jwtToken);
-//        return AuthenticationResponse.builder()
-//                .accessToken(jwtToken)
-//                .refreshToken(refreshToken)
-//                    .firstname(savedUser.getName())
-//                .build();
-        return null;
+        if (repository.existsByUsername(request.username())) {
+            throw new TCKNAlreadyExistsException("Identity number already exists for this user");
+        }
+        var user = User.builder()
+                .name(request.name())
+                .surname(request.surname())
+                .username(request.username())
+                .password(passwordEncoder.encode(request.password()))
+                .role(Role.ROLE_USER)
+                .build();
+        var savedUser = repository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        saveUserToken(savedUser, jwtToken);
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .firstname(savedUser.getName())
+                .build();
     }
 
     public AuthenticationResponse authenticate(LoginRequest request) {
@@ -60,11 +59,11 @@ public class AuthenticationService {
         authenticationManager.authenticate(
 
                 new UsernamePasswordAuthenticationToken(
-                        request.identityNumber(),
+                        request.username(),
                         request.password()
                 )
         );
-        var user = repository.findByIdentityNumber(request.identityNumber())
+        var user = repository.findByUsername(request.username())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
@@ -105,14 +104,14 @@ public class AuthenticationService {
     ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String identityNumber;
+        final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        identityNumber = jwtService.extractUsername(refreshToken);
-        if (identityNumber != null) {
-            var user = this.repository.findByIdentityNumber(identityNumber)
+        username = jwtService.extractUsername(refreshToken);
+        if (username != null) {
+            var user = this.repository.findByUsername(username)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);

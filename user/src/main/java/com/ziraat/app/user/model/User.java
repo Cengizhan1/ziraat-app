@@ -29,16 +29,7 @@ public class User implements UserDetails {
     private String surname;
     private String password;
     @Column(unique = true)
-    private String identityNumber;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private UserInformation userInformation;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private UserContactInformation userContactInformation;
-
+    private String username;
 
     private boolean accountNonExpired;
     private boolean isEnabled;
@@ -51,11 +42,6 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return identityNumber;
     }
 
     @Override

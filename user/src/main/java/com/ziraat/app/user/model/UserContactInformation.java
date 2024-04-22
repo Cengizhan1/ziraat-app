@@ -29,8 +29,7 @@ public class UserContactInformation {
     private Boolean phonePermission = false;
     private Boolean emailPermission = false;
 
-    @OneToOne
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 

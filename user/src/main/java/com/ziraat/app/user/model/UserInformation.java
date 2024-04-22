@@ -29,8 +29,7 @@ public class UserInformation {
     private Double salary;
     private LocalDateTime birthDate;
 
-    @OneToOne
-    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 }

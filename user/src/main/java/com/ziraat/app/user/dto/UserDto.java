@@ -7,7 +7,7 @@ public record UserDto(
         String id,
         String name,
         String surname,
-        String identityNumber,
+        String username,
         Integer age,
         Integer elo
 

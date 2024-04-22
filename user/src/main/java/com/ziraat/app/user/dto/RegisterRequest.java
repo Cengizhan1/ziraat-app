@@ -1,11 +1,11 @@
 package com.ziraat.app.user.dto;
 
 
+import com.ziraat.app.user.model.enums.Role;
+
 public record RegisterRequest(
         String name,
-        String identityNumber,
         String surname,
         String password,
-        Integer age
-){
-}
+        String username
+){}

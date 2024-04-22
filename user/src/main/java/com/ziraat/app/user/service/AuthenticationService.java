@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ziraat.app.user.dto.AuthenticationResponse;
 import com.ziraat.app.user.dto.LoginRequest;
 import com.ziraat.app.user.dto.RegisterRequest;
-import com.ziraat.app.user.exception.TCKNAlreadyExistsException;
+import com.ziraat.app.user.exception.UsernameAlreadyExistsException;
 import com.ziraat.app.user.model.Token;
 import com.ziraat.app.user.model.User;
 import com.ziraat.app.user.model.enums.Role;
@@ -34,7 +34,7 @@ public class AuthenticationService {
     public AuthenticationResponse register(RegisterRequest request) {
 
         if (repository.existsByUsername(request.username())) {
-            throw new TCKNAlreadyExistsException("Identity number already exists for this user");
+            throw new UsernameAlreadyExistsException("Identity number already exists for this user");
         }
         var user = User.builder()
                 .name(request.name())

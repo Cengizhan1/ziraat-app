@@ -8,6 +8,7 @@
         <artifactId>ziraat-app</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+    <packaging>jar</packaging>
 
     <artifactId>user</artifactId>
 
@@ -18,16 +19,6 @@
     </properties>
 
     <dependencies>
-
-<!--        &lt;!&ndash; Local &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.ziraat.app</groupId>-->
-<!--            <artifactId>card</artifactId>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.ziraat.app</groupId>-->
-<!--            <artifactId>account</artifactId>-->
-<!--        </dependency>-->
 
         <!-- Spring Boot -->
         <dependency>
@@ -97,20 +88,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

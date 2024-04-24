@@ -29,5 +29,4 @@ public class Card {
     private LocalDateTime createdDate;
     private String userId;
     private String accountId;
-    private String accountNumber;
 }

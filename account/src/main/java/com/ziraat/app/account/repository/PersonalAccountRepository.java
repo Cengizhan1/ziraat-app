@@ -1,6 +1,6 @@
-package com.ziraat.app.card.repository;
+package com.ziraat.app.account.repository;
 
-import com.ziraat.app.card.model.PersonalAccount;
+import com.ziraat.app.account.model.PersonalAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PersonalAccountRepository extends JpaRepository<PersonalAccount, Long> {

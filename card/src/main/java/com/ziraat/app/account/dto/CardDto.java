@@ -1,7 +1,7 @@
-package com.ziraat.app.card.dto;
+package com.ziraat.app.account.dto;
 
-import com.ziraat.app.card.model.Card;
-import com.ziraat.app.card.model.enums.CardType;
+import com.ziraat.app.account.model.Card;
+import com.ziraat.app.account.model.enums.CardType;
 
 import java.time.LocalDateTime;
 

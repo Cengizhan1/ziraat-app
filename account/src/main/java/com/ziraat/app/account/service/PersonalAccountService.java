@@ -1,8 +1,8 @@
-package com.ziraat.app.card.service;
+package com.ziraat.app.account.service;
 
-import com.ziraat.app.card.dto.PersonalAccountDto;
-import com.ziraat.app.card.model.PersonalAccount;
-import com.ziraat.app.card.repository.PersonalAccountRepository;
+import com.ziraat.app.account.dto.PersonalAccountDto;
+import com.ziraat.app.account.model.PersonalAccount;
+import com.ziraat.app.account.repository.PersonalAccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

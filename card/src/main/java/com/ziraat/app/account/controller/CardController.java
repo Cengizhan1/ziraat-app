@@ -1,8 +1,8 @@
-package com.ziraat.app.card.controller;
+package com.ziraat.app.account.controller;
 
-import com.ziraat.app.card.dto.CardCreateRequest;
-import com.ziraat.app.card.dto.CardDto;
-import com.ziraat.app.card.service.CardService;
+import com.ziraat.app.account.dto.CardCreateRequest;
+import com.ziraat.app.account.dto.CardDto;
+import com.ziraat.app.account.service.CardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

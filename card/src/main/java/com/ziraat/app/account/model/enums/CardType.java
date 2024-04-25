@@ -1,4 +1,4 @@
-package com.ziraat.app.card.model.enums;
+package com.ziraat.app.account.model.enums;
 
 public enum CardType {
     CREDIT,

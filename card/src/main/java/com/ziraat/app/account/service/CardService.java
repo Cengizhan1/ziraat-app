@@ -1,12 +1,11 @@
-package com.ziraat.app.card.service;
+package com.ziraat.app.account.service;
 
-import com.ziraat.app.card.dto.CardCreateRequest;
-import com.ziraat.app.card.dto.CardDto;
-import com.ziraat.app.card.model.Card;
-import com.ziraat.app.card.repository.CardRepository;
+import com.ziraat.app.account.dto.CardCreateRequest;
+import com.ziraat.app.account.dto.CardDto;
+import com.ziraat.app.account.model.Card;
+import com.ziraat.app.account.repository.CardRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;

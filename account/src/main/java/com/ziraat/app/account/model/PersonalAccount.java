@@ -27,4 +27,6 @@ public class PersonalAccount {
     private LocalDateTime createdDate;
     private AccountState accountState;  // Enum
     private String IBAN;
+    private String userId;
+
 }

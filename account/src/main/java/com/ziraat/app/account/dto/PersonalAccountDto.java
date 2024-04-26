@@ -10,9 +10,11 @@ public record PersonalAccountDto(
          String accountHolderName,
          double availableBalance,
          double balance,
+         double totalBalance,
          LocalDateTime createdDate,
          AccountState accountState,  // Enum
-         String IBAN
+         String IBAN,
+         String userId
 ) {
     public static PersonalAccountDto convert(PersonalAccount personalAccount) {
         return new PersonalAccountDto(
@@ -20,10 +22,11 @@ public record PersonalAccountDto(
                 personalAccount.getAccountHolderName(),
                 personalAccount.getAvailableBalance(),
                 personalAccount.getBalance(),
+                0.0, // Varsayılan değer
                 personalAccount.getCreatedDate(),
                 personalAccount.getAccountState(),
-                personalAccount.getIBAN()
+                personalAccount.getIBAN(),
+                personalAccount.getUserId()
         );
     }
-
 }

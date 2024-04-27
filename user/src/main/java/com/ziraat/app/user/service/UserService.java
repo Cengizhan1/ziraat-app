@@ -26,11 +26,16 @@ public class UserService {
     }
     protected User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findByUsername(authentication.getName()).orElseThrow((
+        return userRepository.findByIdentityNumber(authentication.getName()).orElseThrow((
                 () -> new UsernameNotFoundException("Authenticated user not found")));
     }
 
     private User findUserById(String id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    protected User getUserByIdentityNumber(String identityNumber) {
+        return userRepository.findByIdentityNumber(identityNumber)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

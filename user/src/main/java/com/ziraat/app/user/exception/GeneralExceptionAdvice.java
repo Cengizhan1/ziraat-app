@@ -38,8 +38,8 @@ public class GeneralExceptionAdvice extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<?> handle(UsernameAlreadyExistsException exception) {
+    @ExceptionHandler(IdentityNumberAlreadyExistsException.class)
+    public ResponseEntity<?> handle(IdentityNumberAlreadyExistsException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 

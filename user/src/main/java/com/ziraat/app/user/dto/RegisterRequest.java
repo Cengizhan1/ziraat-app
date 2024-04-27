@@ -7,5 +7,5 @@ public record RegisterRequest(
         String name,
         String surname,
         String password,
-        String username
+        String identityNumber
 ){}

@@ -4,6 +4,7 @@ import com.ziraat.app.account.dto.CardCreateRequest;
 import com.ziraat.app.account.dto.CardDto;
 import com.ziraat.app.account.model.Card;
 import com.ziraat.app.account.repository.CardRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,20 +19,24 @@ public class CardService {
         this.repository = repository;
     }
 
-    public CardDto createCard(CardCreateRequest request){
+    public CardDto createCard(CardCreateRequest request, HttpServletRequest httpServletRequest) {
         LocalDateTime now = LocalDateTime.now();
         Card card = new Card();
         card.setCardType(request.cardType());
         card.setCardNumber(generateCardNumber());
         card.setCvc(generateCvc());
         card.setExpireDate(generateExpireDate(now));
-        card.setCardHolderName("John Doe"); // TODO
+        card.setCardHolderName(generateHolderName(httpServletRequest));
         card.setCreatedDate(now);
-        card.setUserId("15151"); // TODO
+        card.setUserId(httpServletRequest.getAttribute("userId").toString());
         card.setAccountId(request.accountId());
         return CardDto.convert(repository.save(card));
     }
 
+    private String generateHolderName(HttpServletRequest httpServletRequest) {
+        return httpServletRequest.getAttribute("name").toString() + " " +
+                httpServletRequest.getAttribute("surname").toString();
+    }
 
     private String generateCvc() {
         return Long.toString(new Random().nextLong()).substring(1, 4);

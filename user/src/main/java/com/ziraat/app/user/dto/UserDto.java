@@ -4,15 +4,15 @@ package com.ziraat.app.user.dto;
 import com.ziraat.app.user.model.User;
 
 public record UserDto(
-        String id,
         String name,
         String surname,
-        String username,
-        Integer age,
-        Integer elo
+        String identityNumber
 
 ) {
     public static UserDto convert(User user) {
-        return null; // TODO
+        return new UserDto(
+                user.getName(),
+                user.getSurname(),
+                user.getIdentityNumber());
     }
 }

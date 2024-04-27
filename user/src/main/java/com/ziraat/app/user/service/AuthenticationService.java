@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ziraat.app.user.dto.AuthenticationResponse;
 import com.ziraat.app.user.dto.LoginRequest;
 import com.ziraat.app.user.dto.RegisterRequest;
-import com.ziraat.app.user.exception.UsernameAlreadyExistsException;
+import com.ziraat.app.user.exception.IdentityNumberAlreadyExistsException;
 import com.ziraat.app.user.model.Token;
 import com.ziraat.app.user.model.User;
 import com.ziraat.app.user.model.enums.Role;
@@ -33,13 +33,13 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
 
-        if (repository.existsByUsername(request.username())) {
-            throw new UsernameAlreadyExistsException("Identity number already exists for this user");
+        if (repository.existsByIdentityNumber(request.identityNumber())) {
+            throw new IdentityNumberAlreadyExistsException("Identity number already exists for this user");
         }
         var user = User.builder()
                 .name(request.name())
                 .surname(request.surname())
-                .username(request.username())
+                .identityNumber(request.identityNumber())
                 .password(passwordEncoder.encode(request.password()))
                 .role(Role.ROLE_USER)
                 .build();
@@ -59,11 +59,11 @@ public class AuthenticationService {
         authenticationManager.authenticate(
 
                 new UsernamePasswordAuthenticationToken(
-                        request.username(),
+                        request.identityNumber(),
                         request.password()
                 )
         );
-        var user = repository.findByUsername(request.username())
+        var user = repository.findByIdentityNumber(request.identityNumber())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
 
@@ -104,14 +104,14 @@ public class AuthenticationService {
     ) throws IOException {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String refreshToken;
-        final String username;
+        final String identityNumber;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         refreshToken = authHeader.substring(7);
-        username = jwtService.extractUsername(refreshToken);
-        if (username != null) {
-            var user = this.repository.findByUsername(username)
+        identityNumber = jwtService.extractIdentityNumber(refreshToken);
+        if (identityNumber != null) {
+            var user = this.repository.findByIdentityNumber(identityNumber)
                     .orElseThrow();
             if (jwtService.isTokenValid(refreshToken, user)) {
                 var accessToken = jwtService.generateToken(user);

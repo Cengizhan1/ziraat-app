@@ -1,5 +1,6 @@
 package com.ziraat.app.user.service;
 
+import com.ziraat.app.user.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +18,8 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    private final UserService userService;
+
     @Value("${application.security.jwt.secret-key}")
     private String secretKey;
     @Value("${application.security.jwt.expiration}")
@@ -25,8 +27,21 @@ public class JwtService {
     @Value("${application.security.jwt.refresh-token.expiration}")
     private long refreshExpiration;
 
-    public String extractUsername(String token) {
+    public JwtService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String extractIdentityNumber(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public HashMap<String, String> extractExtraClaims(String token) {
+        Claims claims = extractAllClaims(token);
+        HashMap<String, String> extraClaims = new HashMap<>();
+        extraClaims.put("userId", claims.get("userId", String.class));
+        extraClaims.put("name", claims.get("name", String.class));
+        extraClaims.put("surname", claims.get("surname", String.class));
+        return extraClaims;
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -35,11 +50,11 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+        return generateToken(generateExtraClaims(userDetails), userDetails);
     }
 
     public String generateToken(
-            Map<String, Object> extraClaims,
+            Map<String, String> extraClaims,
             UserDetails userDetails
     ) {
         return buildToken(extraClaims, userDetails, jwtExpiration);
@@ -48,11 +63,20 @@ public class JwtService {
     public String generateRefreshToken(
             UserDetails userDetails
     ) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return buildToken(generateExtraClaims(userDetails), userDetails, refreshExpiration);
+    }
+
+    private HashMap<String, String> generateExtraClaims(UserDetails userDetails) {
+        HashMap<String,String> extraClaims = new HashMap<>();
+        User user = userService.getUserByIdentityNumber(userDetails.getUsername());
+        extraClaims.put("userId", user.getId());
+        extraClaims.put("name", user.getName());
+        extraClaims.put("surname", user.getSurname());
+        return extraClaims;
     }
 
     private String buildToken(
-            Map<String, Object> extraClaims,
+            Map<String, String> extraClaims,
             UserDetails userDetails,
             long expiration
     ) {
@@ -67,8 +91,8 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String identityNumber = extractIdentityNumber(token);
+        return (identityNumber.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {

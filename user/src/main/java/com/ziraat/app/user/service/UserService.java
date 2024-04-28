@@ -21,5 +21,4 @@ public class UserService {
         return userRepository.findByUsername(authentication.getName()).orElseThrow((
                 () -> new UsernameNotFoundException("Authenticated user not found")));
     }
-
 }

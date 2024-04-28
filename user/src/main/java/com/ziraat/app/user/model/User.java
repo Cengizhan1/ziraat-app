@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private String surname;
     private String password;
     @Column(unique = true)
-    private String username;
+    private String identityNumber;
 
     private boolean accountNonExpired;
     private boolean isEnabled;
@@ -42,6 +42,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return identityNumber;
     }
 
     @Override

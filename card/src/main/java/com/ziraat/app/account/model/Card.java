@@ -25,6 +25,7 @@ public class Card {
     private String cardNumber;
     private String cvc;
     private String expireDate;
+    private String cardPin;
     private String cardHolderName;
     private LocalDateTime createdDate;
     private String userId;

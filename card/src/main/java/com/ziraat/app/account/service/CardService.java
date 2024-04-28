@@ -28,6 +28,7 @@ public class CardService {
         card.setExpireDate(generateExpireDate(now));
         card.setCardHolderName(generateHolderName(httpServletRequest));
         card.setCreatedDate(now);
+        card.setCardPin(request.cardPin());
         card.setUserId(httpServletRequest.getAttribute("userId").toString());
         card.setAccountId(request.accountId());
         return CardDto.convert(repository.save(card));

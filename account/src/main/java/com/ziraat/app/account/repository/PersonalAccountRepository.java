@@ -12,5 +12,4 @@ public interface PersonalAccountRepository extends JpaRepository<PersonalAccount
     void delet(String accountNumber, String accountHolderName);
     @Query("SELECT SUM(p.availableBalance + p.balance) FROM PersonalAccount p WHERE p.userId = :userId")
     Double calculateTotalBalanceByUserId(@Param("userId") String userId);
-
 }

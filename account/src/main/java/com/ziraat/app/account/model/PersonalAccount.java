@@ -28,5 +28,4 @@ public class PersonalAccount {
     private AccountState accountState;  // Enum
     private String IBAN;
     private String userId;
-
 }

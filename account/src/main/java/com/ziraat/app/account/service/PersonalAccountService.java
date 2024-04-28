@@ -27,7 +27,7 @@ public class PersonalAccountService {
 
     public List<PersonalAccountDto> showById(Long userId) {
         List<PersonalAccountDto> accountDtos = new ArrayList<>();
-        List<PersonalAccount> personalAccounts = personalAccountRepository.findByUserId((userId));
+        List<PersonalAccount> personalAccounts = personalAccountRepository.findByUserId(userId);
         for (PersonalAccount personalAccount : personalAccounts) {
             PersonalAccountDto accountDto = PersonalAccountDto.convert(personalAccount);
             accountDtos.add(accountDto);

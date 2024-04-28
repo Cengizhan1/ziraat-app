@@ -10,7 +10,6 @@ public record PersonalAccountDto(
          String accountHolderName,
          double availableBalance,
          double balance,
-         double totalBalance,
          LocalDateTime createdDate,
          AccountState accountState,  // Enum
          String IBAN,
@@ -22,7 +21,6 @@ public record PersonalAccountDto(
                 personalAccount.getAccountHolderName(),
                 personalAccount.getAvailableBalance(),
                 personalAccount.getBalance(),
-                0.0, // Varsayılan değer
                 personalAccount.getCreatedDate(),
                 personalAccount.getAccountState(),
                 personalAccount.getIBAN(),

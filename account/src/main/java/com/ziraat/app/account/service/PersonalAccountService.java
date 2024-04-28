@@ -1,61 +1,81 @@
 package com.ziraat.app.account.service;
 
-import com.ziraat.app.account.dto.PersonalAccountCreateRequest;
-import com.ziraat.app.account.dto.PersonalAccountDeleteRequest;
 import com.ziraat.app.account.dto.PersonalAccountDto;
+import com.ziraat.app.account.dto.SummaryPersonalAccountDto;
+import com.ziraat.app.account.exception.PersonalAccountNotFoundException;
 import com.ziraat.app.account.model.PersonalAccount;
+import com.ziraat.app.account.model.enums.AccountState;
 import com.ziraat.app.account.repository.PersonalAccountRepository;
-import org.springframework.data.crossstore.ChangeSetPersister;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
 public class PersonalAccountService {
-    private final PersonalAccountRepository personalAccountRepository;
-   // private final List<PersonalAccount> accounts = new ArrayList<>();
 
+    private final PersonalAccountRepository repository;
 
     public PersonalAccountService(PersonalAccountRepository repository) {
-        this.personalAccountRepository = repository;
+        this.repository = repository;
     }
 
-   
 
-    public List<PersonalAccountDto> showById(Long userId) {
-        List<PersonalAccountDto> accountDtos = new ArrayList<>();
-        List<PersonalAccount> personalAccounts = personalAccountRepository.findByUserId(userId);
-        for (PersonalAccount personalAccount : personalAccounts) {
-            PersonalAccountDto accountDto = PersonalAccountDto.convert(personalAccount);
-            accountDtos.add(accountDto);
-        }
-        return accountDtos;
+    public List<PersonalAccountDto> listByUserId(String userId) {
+        return repository.findByUserId(userId).stream()
+                .map(PersonalAccountDto::convert)
+                .collect(Collectors.toList());
     }
 
-    public PersonalAccountDto create(PersonalAccountCreateRequest request){
-        LocalDateTime now=LocalDateTime.now();
-        PersonalAccount personalAccount=new PersonalAccount();
-        personalAccount.setAccountState(request.accountState());
+    public PersonalAccountDto create(HttpServletRequest request) {
+        LocalDateTime now = LocalDateTime.now();
+        PersonalAccount personalAccount = new PersonalAccount();
+        personalAccount.setAccountNumber(generateAccountNumber()); // TODO generateAccountNumber metodu kontrol edilecek account number kça haneli harf içeriyor mu ?
+        personalAccount.setAccountHolderName(generateHolderName(request));
+        personalAccount.setAvailableBalance(0.0);
+        personalAccount.setBalance(0.0);
         personalAccount.setCreatedDate(now);
-        return PersonalAccountDto.convert(personalAccountRepository.save(personalAccount));
+        personalAccount.setAccountState(AccountState.ACTIVE);
+//        personalAccount.setIBAN(generateIBAN()); // TODO generateIBAN metodu eklenecek
+        personalAccount.setUserId(request.getAttribute("userId").toString());
+        return PersonalAccountDto.convert(repository.save(personalAccount));
     }
 
 
-    public String delete(PersonalAccountDeleteRequest request) {
-        personalAccountRepository.delet(
-                request.accountNumber(),
-                request.accountHolderName()
-        );
-        return "Hesap başarıyla silindi";
+    public void delete(Long id) {
+        repository.deleteById(id);
     }
 
-    public double summary(String userId) {
-        return personalAccountRepository.calculateTotalBalanceByUserId(userId) != null
-                ? personalAccountRepository.calculateTotalBalanceByUserId(userId)
-                : 0.0;
+    public SummaryPersonalAccountDto summary(String userId) {
+        List<PersonalAccount> accounts = repository.findByUserId(userId);
+        if (accounts.size() > 0) {
+            double totalBalance = accounts.stream().map(PersonalAccount::getBalance).reduce(Double::sum).get();
+            double totalAvailableBalance = accounts.stream().map(PersonalAccount::getAvailableBalance).reduce(Double::sum).get();
+            return new SummaryPersonalAccountDto(
+                    accounts.get(0).getAccountHolderName(),
+                    totalAvailableBalance,
+                    totalBalance
+            );
+        }else throw new PersonalAccountNotFoundException("Personal account not found");
     }
 
+    private String generateHolderName(HttpServletRequest httpServletRequest) {
+        return httpServletRequest.getAttribute("name").toString() + " " +
+                httpServletRequest.getAttribute("surname").toString();
+    }
+
+    private String generateAccountNumber() {
+        String accountNumber;
+        do {
+            accountNumber = Long.toString(new Random().nextLong()).substring(1, 17);
+        }while (validateAccountNumber(accountNumber));
+        return accountNumber;
+    }
+
+    private Boolean validateAccountNumber(String accountNumber) {
+        return repository.existsByAccountNumber(accountNumber);
+    }
 }

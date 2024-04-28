@@ -1,11 +1,11 @@
 package com.ziraat.app.account.controller;
 
-import com.ziraat.app.account.dto.PersonalAccountCreateRequest;
 import com.ziraat.app.account.dto.PersonalAccountDto;
+import com.ziraat.app.account.dto.SummaryPersonalAccountDto;
 import com.ziraat.app.account.service.PersonalAccountService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -18,13 +18,24 @@ public class PersonalAccountController {
         this.service = service;
     }
 
-    @PostMapping("create")
-    public ResponseEntity<PersonalAccountDto> createAccount(PersonalAccountCreateRequest request){
+    @PostMapping
+    public ResponseEntity<PersonalAccountDto> create(HttpServletRequest request){
         return ResponseEntity.ok((service.create(request)));
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<PersonalAccountDto>> getUserById(@PathVariable Long userId) {
-        return ResponseEntity.ok(service.showById(userId));
+    @GetMapping
+    public ResponseEntity<List<PersonalAccountDto>> listByUserId(HttpServletRequest request) {
+        return ResponseEntity.ok(service.listByUserId(request.getAttribute("userId").toString()));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<SummaryPersonalAccountDto> summary(HttpServletRequest request) {
+        return ResponseEntity.ok(service.summary(request.getAttribute("userId").toString()));
     }
 }

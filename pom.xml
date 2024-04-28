@@ -19,5 +19,6 @@
 		<module>user</module>
 		<module>account</module>
 		<module>card</module>
-	</modules>
+        <module>bank</module>
+    </modules>
 </project>

@@ -4,6 +4,7 @@ import com.ziraat.app.account.model.enums.CardType;
 
 public record CardCreateRequest(
         CardType cardType,
-        String accountId
+        String accountId,
+        String cardPin
 ) {
 }

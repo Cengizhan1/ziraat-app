@@ -7,12 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AtmService {
 
-    private final AtmRepository repository;
-
-    public AtmService(AtmRepository repository) {
-        this.repository = repository;
-    }
-
     public void cashWithdrawal(CashTransactionRequest request) {
         validateCardInformation(request);
         cashTransaction(request.accountNumber(), request.amount()*-1);

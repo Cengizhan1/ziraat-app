@@ -33,7 +33,7 @@ public class PersonalAccountService {
     public PersonalAccountDto create(HttpServletRequest request) {
         LocalDateTime now = LocalDateTime.now();
         PersonalAccount personalAccount = new PersonalAccount();
-        personalAccount.setAccountNumber(generateAccountNumber()); // TODO generateAccountNumber metodu kontrol edilecek account number kça haneli harf içeriyor mu ?
+        personalAccount.setAccountNumber(generateAccountNumber());
         personalAccount.setAccountHolderName(generateHolderName(request));
         personalAccount.setAvailableBalance(0.0);
         personalAccount.setBalance(0.0);
@@ -70,7 +70,7 @@ public class PersonalAccountService {
     private String generateAccountNumber() {
         String accountNumber;
         do {
-            accountNumber = Long.toString(new Random().nextLong()).substring(1, 17);
+            accountNumber = Long.toString(new Random().nextLong()).substring(1, 13);
         }while (validateAccountNumber(accountNumber));
         return accountNumber;
     }

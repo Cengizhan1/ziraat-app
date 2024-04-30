@@ -112,14 +112,14 @@ public class PersonalAccountService {
         return 98 - remainder;
     }
 
-    public void deposit(String userId, double amount) {
-        PersonalAccount account = findAccountByUserId(userId);
+    public void deposit(String accountNumber, double amount) {
+        PersonalAccount account = findAccountByAccountNumber(accountNumber);
         account.setBalance(account.getBalance() + amount);
         repository.save(account);
     }
 
-    public void withdraw(String userId, double amount) {
-        PersonalAccount account = findAccountByUserId(userId);
+    public void withdraw(String accountNumber, double amount) {
+        PersonalAccount account = findAccountByAccountNumber(accountNumber);
         if (account.getBalance() < amount) {
             throw new IllegalArgumentException("Insufficient balance.");
         }
@@ -127,9 +127,9 @@ public class PersonalAccountService {
         repository.save(account);
     }
 
-    private PersonalAccount findAccountByUserId(String userId){
-        return repository.findByUserId(userId).orElseThrow(
-                () -> new PersonalAccountNotFoundException("Account not found for user ID: " + userId)
+    private PersonalAccount findAccountByAccountNumber(String accountNumber) {
+        return repository.findBYAccountNumber(accountNumber).orElseThrow(
+                () -> new PersonalAccountNotFoundException("Account not found for accountNumber: " + accountNumber)
         );
     }
 

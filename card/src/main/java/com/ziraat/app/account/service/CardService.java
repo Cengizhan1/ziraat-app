@@ -2,6 +2,8 @@ package com.ziraat.app.account.service;
 
 import com.ziraat.app.account.dto.CardCreateRequest;
 import com.ziraat.app.account.dto.CardDto;
+import com.ziraat.app.account.dto.CashTransactionRequest;
+import com.ziraat.app.account.exception.CardNotFoundException;
 import com.ziraat.app.account.model.Card;
 import com.ziraat.app.account.repository.CardRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +36,18 @@ public class CardService {
         return CardDto.convert(repository.save(card));
     }
 
+    public boolean validateCard(CashTransactionRequest request) {
+        Card card = getCardByCardNumber(request.cardNumber());
+        return card.getCardPin().equals(request.cardPin()) &&
+                card.getCvc().equals(request.cvc()) &&
+                card.getExpireDate().equals(request.expireDate());
+    }
+
+    private Card getCardByCardNumber(String cardNumber) {
+        return repository.findByCardNumber(cardNumber).orElseThrow(
+                () -> new CardNotFoundException("Card not found with card number " + cardNumber));
+    }
+
     private String generateHolderName(HttpServletRequest httpServletRequest) {
         return httpServletRequest.getAttribute("name").toString() + " " +
                 httpServletRequest.getAttribute("surname").toString();
@@ -46,7 +60,6 @@ public class CardService {
         LocalDateTime expireDate = now.plusYears(5);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return expireDate.format(formatter);
-
     }
     private String generateCardNumber() {
         String cardNumber;

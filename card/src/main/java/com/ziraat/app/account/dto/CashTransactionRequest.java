@@ -1,4 +1,4 @@
-package com.ziraat.app.bank.dto;
+package com.ziraat.app.account.dto;
 
 public record CashTransactionRequest(
          String cardNumber,

@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PersonalAccountRepository extends JpaRepository<PersonalAccount, Long> {
-    List<PersonalAccount> findByUserIdList(String userId);
-    PersonalAccount findByUserId(String userId);
+    List<PersonalAccount> findAllByUserId(String userId);
+    Optional<PersonalAccount> findByUserId(String userId);
 
     @Query("SELECT SUM(p.availableBalance + p.balance) FROM PersonalAccount p WHERE p.userId = :userId")
     Double calculateTotalBalanceByUserId(@Param("userId") String userId);

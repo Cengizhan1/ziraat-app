@@ -13,7 +13,8 @@ public record PersonalAccountDto(
          LocalDateTime createdDate,
          AccountState accountState,  // Enum
          String IBAN,
-         String userId
+         String userId,
+         String countryCode
 ) {
     public static PersonalAccountDto convert(PersonalAccount personalAccount) {
         return new PersonalAccountDto(
@@ -24,7 +25,8 @@ public record PersonalAccountDto(
                 personalAccount.getCreatedDate(),
                 personalAccount.getAccountState(),
                 personalAccount.getIBAN(),
-                personalAccount.getUserId()
+                personalAccount.getUserId(),
+                personalAccount.getCountryCode()
         );
     }
 }

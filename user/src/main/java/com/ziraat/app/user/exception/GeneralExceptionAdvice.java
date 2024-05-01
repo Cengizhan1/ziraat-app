@@ -1,5 +1,9 @@
 package com.ziraat.app.user.exception;
 
+import com.ziraat.app.account.exception.CardNotFoundException;
+import com.ziraat.app.account.exception.PersonalAccountNotFoundException;
+import com.ziraat.app.bank.exception.CardInformationNotValidException;
+import jakarta.validation.UnexpectedTypeException;
 import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +59,26 @@ public class GeneralExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<?> handle(IllegalStateException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PersonalAccountNotFoundException.class)
+    public ResponseEntity<?> handle(PersonalAccountNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CardInformationNotValidException.class)
+    public ResponseEntity<?> handle(CardInformationNotValidException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CardNotFoundException.class)
+    public ResponseEntity<?> handle(CardNotFoundException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public ResponseEntity<?> handle(UnexpectedTypeException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

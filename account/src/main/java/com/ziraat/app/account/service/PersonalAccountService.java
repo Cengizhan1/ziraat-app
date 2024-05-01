@@ -24,9 +24,8 @@ public class PersonalAccountService {
         this.repository = repository;
     }
 
-
-    public List<PersonalAccountDto> findByUserIdList(String userId) {
-        return repository.findByUserIdList(userId).stream()
+    public List<PersonalAccountDto> listByUserId(String userId) {
+        return repository.findAllByUserId(userId).stream()
                 .map(PersonalAccountDto::convert)
                 .collect(Collectors.toList());
     }
@@ -40,19 +39,17 @@ public class PersonalAccountService {
         personalAccount.setBalance(0.0);
         personalAccount.setCreatedDate(now);
         personalAccount.setAccountState(AccountState.ACTIVE);
-       personalAccount.setIBAN(generateIBAN(personalAccount.getCountryCode()));
+        personalAccount.setIBAN(generateIBAN(personalAccount.getCountryCode()));
         personalAccount.setUserId(request.getAttribute("userId").toString());
         return PersonalAccountDto.convert(repository.save(personalAccount));
     }
-
-
 
     public void delete(Long id) {
         repository.deleteById(id);
     }
 
     public SummaryPersonalAccountDto summary(String userId) {
-        List<PersonalAccount> accounts = repository.findByUserIdList(userId);
+        List<PersonalAccount> accounts = repository.findAllByUserId(userId);
         if (accounts.size() > 0) {
             double totalBalance = accounts.stream().map(PersonalAccount::getBalance).reduce(Double::sum).get();
             double totalAvailableBalance = accounts.stream().map(PersonalAccount::getAvailableBalance).reduce(Double::sum).get();
@@ -80,6 +77,7 @@ public class PersonalAccountService {
     private Boolean validateAccountNumber(String accountNumber) {
         return repository.existsByAccountNumber(accountNumber);
     }
+
     public static String generateIBAN(String countryCode) {
         if (countryCode == null || countryCode.length() != 2 || !countryCode.matches("[A-Z]{2}")) {
             throw new IllegalArgumentException("Invalid country code.");
@@ -99,6 +97,7 @@ public class PersonalAccountService {
 
         return countryCode + checkDigitsStr + ibanWithoutCheckDigits.substring(4);
     }
+
     public static int calculateCheckDigits(String input) {
         input = input.trim().toUpperCase().replaceAll("\\s", "");
 
@@ -113,25 +112,25 @@ public class PersonalAccountService {
         return 98 - remainder;
     }
 
-    public void deposit(String userId, double amount) {
-        PersonalAccount account = repository.findByUserId(userId);
-        if (account == null) {
-            throw new IllegalArgumentException("Account not found for user ID: " + userId);
-        }
+    public void deposit(String accountNumber, double amount) {
+        PersonalAccount account = findAccountByAccountNumber(accountNumber);
         account.setBalance(account.getBalance() + amount);
         repository.save(account);
     }
 
-    public void withdraw(String userId, double amount) {
-        PersonalAccount account = repository.findByUserId(userId);
-        if (account == null) {
-            throw new IllegalArgumentException("Account not found for user ID: " + userId);
-        }
+    public void withdraw(String accountNumber, double amount) {
+        PersonalAccount account = findAccountByAccountNumber(accountNumber);
         if (account.getBalance() < amount) {
             throw new IllegalArgumentException("Insufficient balance.");
         }
         account.setBalance(account.getBalance() - amount);
         repository.save(account);
+    }
+
+    private PersonalAccount findAccountByAccountNumber(String accountNumber) {
+        return repository.findBYAccountNumber(accountNumber).orElseThrow(
+                () -> new PersonalAccountNotFoundException("Account not found for accountNumber: " + accountNumber)
+        );
     }
 
 }

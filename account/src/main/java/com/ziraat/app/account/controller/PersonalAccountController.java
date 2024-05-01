@@ -25,7 +25,7 @@ public class PersonalAccountController {
 
     @GetMapping
     public ResponseEntity<List<PersonalAccountDto>> listByUserId(HttpServletRequest request) {
-        return ResponseEntity.ok(service.findByUserIdList(request.getAttribute("userId").toString()));
+        return ResponseEntity.ok(service.listByUserId(request.getAttribute("userId").toString()));
     }
 
     @DeleteMapping("/{id}")

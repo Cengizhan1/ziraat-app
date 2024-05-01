@@ -25,8 +25,8 @@ public class PersonalAccountService {
     }
 
 
-    public List<PersonalAccountDto> listByUserId(String userId) {
-        return repository.findByUserId(userId).stream()
+    public List<PersonalAccountDto> findByUserIdList(String userId) {
+        return repository.findByUserIdList(userId).stream()
                 .map(PersonalAccountDto::convert)
                 .collect(Collectors.toList());
     }

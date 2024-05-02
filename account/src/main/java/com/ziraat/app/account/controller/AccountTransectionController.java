@@ -1,6 +1,6 @@
 package com.ziraat.app.account.controller;
 
-import com.ziraat.app.account.service.AccountTransectionService;
+import com.ziraat.app.account.service.AccountTransactionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("v1/api/transection")
 public class AccountTransectionController {
 
-    private final AccountTransectionService service;
+    private final AccountTransactionService service;
 
-    public AccountTransectionController(AccountTransectionService service) {
+    public AccountTransectionController(AccountTransactionService service) {
         this.service = service;
     }
 

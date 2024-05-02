@@ -1,17 +1,14 @@
 package com.ziraat.app.account.service;
 
 import com.ziraat.app.account.model.AccountTransection;
-import com.ziraat.app.account.model.PersonalAccount;
 import com.ziraat.app.account.repository.AccountTransectionRepository;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.AccountNotFoundException;
-
 @Service
-public class AccountTransectionService {
+public class AccountTransactionService {
     private final AccountTransectionRepository repository;
 
-    public AccountTransectionService(AccountTransectionRepository repository) {
+    public AccountTransactionService(AccountTransectionRepository repository) {
         this.repository = repository;
     }
 

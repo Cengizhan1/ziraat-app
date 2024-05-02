@@ -1,5 +1,6 @@
 package com.ziraat.app.account.model;
 
+import com.ziraat.app.account.model.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,9 @@ public class AccountTransection {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String transactionType;  // Enum
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
+
     private String description;
     private double amount;
     private double availableBalance;

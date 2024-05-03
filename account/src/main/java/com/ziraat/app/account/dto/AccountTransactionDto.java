@@ -1,11 +1,12 @@
 package com.ziraat.app.account.dto;
 
 import com.ziraat.app.account.model.AccountTransection;
+import com.ziraat.app.account.model.enums.TransactionType;
 
 import java.time.LocalDateTime;
 
-public record AccountTransectionDto(
-        String transactionType,  // Enum
+public record AccountTransactionDto(
+        TransactionType transactionType,  // Enum
         String description,
         double amount,
         double availableBalance,
@@ -16,8 +17,8 @@ public record AccountTransectionDto(
         double balance
 
         ) {
-    public static AccountTransectionDto convert(AccountTransection accountTransection){
-        return new AccountTransectionDto(
+    public static AccountTransactionDto convert(AccountTransection accountTransection){
+        return new AccountTransactionDto(
                 accountTransection.getTransactionType(),
                 accountTransection.getDescription(),
                 accountTransection.getAmount(),

@@ -39,7 +39,7 @@ public class PersonalAccountService {
         personalAccount.setBalance(0.0);
         personalAccount.setCreatedDate(now);
         personalAccount.setAccountState(AccountState.ACTIVE);
-        personalAccount.setIBAN(generateIBAN(personalAccount.getCountryCode()));
+        personalAccount.setIBAN(generateIBAN("TR"));
         personalAccount.setUserId(request.getAttribute("userId").toString());
         return PersonalAccountDto.convert(repository.save(personalAccount));
     }
@@ -128,7 +128,7 @@ public class PersonalAccountService {
     }
 
     private PersonalAccount findAccountByAccountNumber(String accountNumber) {
-        return repository.findBYAccountNumber(accountNumber).orElseThrow(
+        return repository.findByAccountNumber(accountNumber).orElseThrow(
                 () -> new PersonalAccountNotFoundException("Account not found for accountNumber: " + accountNumber)
         );
     }

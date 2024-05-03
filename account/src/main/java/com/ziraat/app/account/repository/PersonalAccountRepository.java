@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PersonalAccountRepository extends JpaRepository<PersonalAccount, Long> {
     List<PersonalAccount> findAllByUserId(String userId);
-    Optional<PersonalAccount> findBYAccountNumber(String accountNumber);
+    Optional<PersonalAccount> findByAccountNumber(String accountNumber);
 
     @Query("SELECT SUM(p.availableBalance + p.balance) FROM PersonalAccount p WHERE p.userId = :userId")
     Double calculateTotalBalanceByUserId(@Param("userId") String userId);

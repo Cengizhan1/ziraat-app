@@ -25,6 +25,7 @@ public class PersonalAccount {
     private double availableBalance;
     private double balance;
     private LocalDateTime createdDate;
+    @Enumerated(EnumType.STRING)
     private AccountState accountState;  // Enum
     private String IBAN;
     private String userId;

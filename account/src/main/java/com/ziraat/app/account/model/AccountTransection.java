@@ -30,5 +30,5 @@ public class AccountTransection {
     private String senderAccountNumber;
     private String IBAN;
     private String userId;
-    private double balance;
+    private double balance; // TODO kullanılmıyorsa kaldırılsın
 }

@@ -12,27 +12,7 @@ public class AccountTransactionService {
         this.repository = repository;
     }
 
-    public void deposit(String userId, double amount) {
-        AccountTransection account = repository.findByUserId(userId);
-        if (account == null) {
-            throw new IllegalArgumentException("Account not found for user ID: " + userId);
-        }
-        account.setBalance(account.getBalance() + amount);
-        repository.save(account);
-    }
-
-    public void withdraw(String userId, double amount) {
-        AccountTransection account = repository.findByUserId(userId);
-        if (account == null) {
-            throw new IllegalArgumentException("Account not found for user ID: " + userId);
-        }
-        if (account.getBalance() < amount) {
-            throw new IllegalArgumentException("Insufficient balance.");
-        }
-        account.setBalance(account.getBalance() - amount);
-        repository.save(account);
-    }
-
+//AccountService taşı
     public void transfer(String fromUserId, String toUserId, double amount) {
         AccountTransection fromAccount = repository.findByUserId(fromUserId);
         AccountTransection toAccount = repository.findByUserId(toUserId);

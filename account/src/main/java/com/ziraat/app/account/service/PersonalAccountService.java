@@ -1,12 +1,12 @@
 package com.ziraat.app.account.service;
 
+import com.ziraat.app.account.dto.AccountTransactionDto;
 import com.ziraat.app.account.dto.PersonalAccountDto;
-import com.ziraat.app.account.model.AccountTransection;
-import com.ziraat.app.account.utils.Module97;
 import com.ziraat.app.account.dto.SummaryPersonalAccountDto;
 import com.ziraat.app.account.exception.PersonalAccountNotFoundException;
 import com.ziraat.app.account.model.PersonalAccount;
 import com.ziraat.app.account.model.enums.AccountState;
+import com.ziraat.app.account.model.enums.TransactionType;
 import com.ziraat.app.account.repository.PersonalAccountRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,11 @@ import java.util.stream.Collectors;
 public class PersonalAccountService {
 
     private final PersonalAccountRepository repository;
+    private final AccountTransactionService accountTransactionService;
 
-    public PersonalAccountService(PersonalAccountRepository repository) {
+    public PersonalAccountService(PersonalAccountRepository repository, AccountTransactionService accountTransactionService) {
         this.repository = repository;
+        this.accountTransactionService = accountTransactionService;
     }
 
     public List<PersonalAccountDto> listByUserId(String userId) {
@@ -116,8 +118,16 @@ public class PersonalAccountService {
     public void deposit(String accountNumber, double amount) {
         PersonalAccount account = findAccountByAccountNumber(accountNumber);
         account.setBalance(account.getBalance() + amount);
+
         repository.save(account);
-        // TODO account transaction tetiklenecek
+
+        createAccountTransaction(
+                TransactionType.DEPOSIT,
+                "Deposit",
+                amount,
+                account.getBalance(),
+                account.getAccountNumber(),
+                null);
     }
 
     public void withdraw(String accountNumber, double amount) {
@@ -127,7 +137,14 @@ public class PersonalAccountService {
         }
         account.setBalance(account.getBalance() - amount);
         repository.save(account);
-        // TODO account transaction tetiklenecek
+
+        createAccountTransaction(
+                TransactionType.WITHDRAWAL,
+                "WITHDRAWAL",
+                amount,
+                account.getBalance(),
+                account.getAccountNumber(),
+                null);
     }
 
     public void transfer(String fromUserId, String IBAN, double amount) {
@@ -152,6 +169,34 @@ public class PersonalAccountService {
 //        repository.save(fromAccount);
 //        repository.save(toAccount);
         // TODO account transaction tetiklenecek
+//        createAccountTransaction(
+//                TransactionType.TRANSFER,
+//                "WITHDRAWAL",
+//                amount,
+//                account.getBalance(),
+//                account.getAccountNumber(),
+//                null);
+
+
+    }
+
+    private void createAccountTransaction(
+            TransactionType transactionType,
+            String description,
+            double amount,
+            double availableBalance,
+            String senderAccountNumber,
+            String receiverAccountNumber
+    ) {
+        AccountTransactionDto accountTransactionDto = new AccountTransactionDto(
+                transactionType,
+                description,
+                amount,
+                availableBalance,
+                senderAccountNumber,
+                receiverAccountNumber
+        );
+        accountTransactionService.createTransaction(accountTransactionDto);
     }
 
     private PersonalAccount findAccountByAccountNumber(String accountNumber) {

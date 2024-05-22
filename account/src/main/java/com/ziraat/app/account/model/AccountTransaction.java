@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountTransection {
+public class AccountTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,9 +26,7 @@ public class AccountTransection {
     private String description;
     private double amount;
     private double availableBalance;
-    private LocalDateTime transactionDate;
+    private LocalDateTime transactionDate = LocalDateTime.now();
     private String senderAccountNumber;
-    private String IBAN;
-    private String userId;
-    private double balance; // TODO kullanılmıyorsa kaldırılsın
+    private String receiverAccountNumber;
 }

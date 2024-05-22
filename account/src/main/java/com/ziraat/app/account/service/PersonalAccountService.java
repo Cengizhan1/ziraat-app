@@ -1,6 +1,7 @@
 package com.ziraat.app.account.service;
 
 import com.ziraat.app.account.dto.PersonalAccountDto;
+import com.ziraat.app.account.model.AccountTransection;
 import com.ziraat.app.account.utils.Module97;
 import com.ziraat.app.account.dto.SummaryPersonalAccountDto;
 import com.ziraat.app.account.exception.PersonalAccountNotFoundException;
@@ -116,6 +117,7 @@ public class PersonalAccountService {
         PersonalAccount account = findAccountByAccountNumber(accountNumber);
         account.setBalance(account.getBalance() + amount);
         repository.save(account);
+        // TODO account transaction tetiklenecek
     }
 
     public void withdraw(String accountNumber, double amount) {
@@ -125,6 +127,31 @@ public class PersonalAccountService {
         }
         account.setBalance(account.getBalance() - amount);
         repository.save(account);
+        // TODO account transaction tetiklenecek
+    }
+
+    public void transfer(String fromUserId, String IBAN, double amount) {
+//        PersonalAccount fromAccount = repository.findByUserId(fromUserId);
+//        PersonalAccount toAccount = repository.findByIBAN(IBAN).orElseThrow();
+
+//        if (fromAccount == null) {
+//            throw new IllegalArgumentException("Account not found for user ID: " + fromUserId);
+//        }
+//
+//        if (toAccount == null) {
+//            throw new IllegalArgumentException("Account not found for user ID: " + toUserId);
+//        }
+//
+//        if (fromAccount.getBalance() < amount) {
+//            throw new IllegalArgumentException("Insufficient balance.");
+//        }
+
+//        fromAccount.setBalance(fromAccount.getBalance() - amount);
+//        toAccount.setBalance(toAccount.getBalance() + amount);
+//
+//        repository.save(fromAccount);
+//        repository.save(toAccount);
+        // TODO account transaction tetiklenecek
     }
 
     private PersonalAccount findAccountByAccountNumber(String accountNumber) {
@@ -132,5 +159,8 @@ public class PersonalAccountService {
                 () -> new PersonalAccountNotFoundException("Account not found for accountNumber: " + accountNumber)
         );
     }
+
+    // TODO private findAccountByIban methodu eklenecek üstteki gibi
+    // TODO private fidnAccountByUserId methodu eklenecek üstteki gibi
 
 }

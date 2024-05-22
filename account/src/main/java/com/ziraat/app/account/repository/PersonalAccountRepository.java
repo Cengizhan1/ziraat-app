@@ -12,6 +12,8 @@ public interface PersonalAccountRepository extends JpaRepository<PersonalAccount
     List<PersonalAccount> findAllByUserId(String userId);
     Optional<PersonalAccount> findByAccountNumber(String accountNumber);
 
+    Optional<PersonalAccount> findByIBAN(String IBAN);
+
     @Query("SELECT SUM(p.availableBalance + p.balance) FROM PersonalAccount p WHERE p.userId = :userId")
     Double calculateTotalBalanceByUserId(@Param("userId") String userId);
 
